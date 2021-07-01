@@ -1,0 +1,46 @@
+<script src="scripts/collision.js"></script>
+<script src="scripts/levels.js"></script>
+<script src="scripts/player.js"></script>
+<script src="https://koda.nu/simple.js">
+	function start() {
+		player = new player();
+		levelIndex = 14;
+		player.size = levels[levelIndex].tileSize / 2;
+		restartLevel(player, levels[levelIndex]);
+		tx = totalWidth/2-levels[levelIndex].tileSize*levels[levelIndex].width/2; 
+		ty = totalHeight/2-levels[levelIndex].tileSize*levels[levelIndex].height/2;
+		translate(tx, ty);
+	}
+
+	function update() {
+		//Logic
+		if (levels[levelIndex].completed) {
+			levelIndex++;
+
+			if (levelIndex == 15) {
+				clearScreen();
+				text(totalWidth / 2 - 280, totalHeight / 2 - 50, 50, "Game Complete!", "#000");
+				text(totalWidth / 2 - 280, totalHeight / 2, 50, "Death count: " + player.deathCount, "#000");
+				stopUpdate();
+			}
+
+			else {
+				nextLevel(player, levels[levelIndex]);
+			}
+		}
+		if (!player.alive) {
+			restartLevel(player, levels[levelIndex]);
+			player.deathCount++;
+			player.alive = true;
+		}
+
+		//Refresh screen
+		if (levelIndex != 15) {
+		clearScreen();
+		printLevel(levels[levelIndex], levelIndex);
+		movePlayer();
+		collisionCheck(player, levels[levelIndex]);
+		printPlayer();
+		}
+	}
+</script>
